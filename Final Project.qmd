@@ -31,7 +31,7 @@ colnames(data)[8] ="resources_offered"
 colnames(data)[9] ="anonymity_protected"
 colnames(data)[10] ="difficulty_requesting_leave"
 
-# Col K - P
+# Col K - P: Current workplace stigma
 colnames(data)[11] ="mental_health_discussion_consequences"
 colnames(data)[12] ="physical_health_discussion_consequences"
 colnames(data)[13] ="comfort_discussing_with_coworkers"
@@ -48,7 +48,7 @@ colnames(data)[22] ="if_revealed_coworker_impact"
 colnames(data)[23] ="productivity_affected"
 colnames(data)[24] ="if_productivity_affected_percent_affected"
 
-# Col
+# Col Y - AJ: Previous workplaces stigma
 colnames(data)[25] ="prev_employers"
 colnames(data)[26] ="if_prev_employers_mental_health_covered"
 colnames(data)[27] ="if_prev_employers_know_work_care_options"
@@ -56,10 +56,46 @@ colnames(data)[28] ="if_prev_employers_discussed_mental_health"
 colnames(data)[29] ="if_prev_employers_resources_offered"
 colnames(data)[30] ="if_prev_employers_anonymity_protected"
 colnames(data)[31] ="if_prev_employers_mental_health_discussion_consequences"
+colnames(data)[32] ="if_prev_employers_physical_health_discussion_consequences"
+colnames(data)[33] ="discuss_coworkers_previous"
+colnames(data)[34] ="discuss_supervisor_previous"
+colnames(data)[35] ="mentalphysical_previous"
+colnames(data)[36] ="negative_consequence_coworkers_previous"
+
+# AK - AS: Perceived societal stigma
+colnames(data)[37] ="physical_interview"
+colnames(data)[38] ="why_37"
+colnames(data)[39] ="mental_interview"
+colnames(data)[40] ="why_39"
+colnames(data)[41] ="hurt_career"
+colnames(data)[42] ="coworker_view_negatively"
+colnames(data)[43] ="share_friends_families"
+colnames(data)[44] ="unsupportive_response"
+colnames(data)[45] ="observation_current"
 
 
+colnames(data)[46] ="family_history"
+colnames(data)[47] ="past_disorders"
+colnames(data)[48] ="current_disorder"
+colnames(data)[49] ="past_conditions_diagnosed"
+colnames(data)[50] ="condition_believe"
+colnames(data)[51] ="diagnoses"
+colnames(data)[52] ="condition_diagnosed"
+colnames(data)[53] ="seek_treatment"
 
+# BB, BC: Work interference
+colnames(data)[54] ="interfere_treated"
+colnames(data)[55] ="interfere_not_treated"
 
+# BD - BK: Demographic
+colnames(data)[56] ="age"
+colnames(data)[57] ="gender"
+colnames(data)[58] ="country_live"
+colnames(data)[59] ="USstate_live"
+colnames(data)[60] ="country_work"
+colnames(data)[61] ="USstate_work"
+colnames(data)[62] ="work_position"
+colnames(data)[63] ="remote_work"
 ```
 
 
