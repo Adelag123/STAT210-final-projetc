@@ -73,7 +73,6 @@ colnames(data)[43] ="share_friends_families"
 colnames(data)[44] ="unsupportive_response"
 colnames(data)[45] ="observation_current"
 
-
 colnames(data)[46] ="family_history"
 colnames(data)[47] ="past_disorders"
 colnames(data)[48] ="current_disorder"
@@ -96,11 +95,37 @@ colnames(data)[60] ="country_work"
 colnames(data)[61] ="USstate_work"
 colnames(data)[62] ="work_position"
 colnames(data)[63] ="remote_work"
+replace_with_na_all(data, condition = ~.x == "")
 ```
 
 
+```{r EDA: }
 
-```{r EDA}
+
+```
+
+
+```{r EDA: Demographic data}
+library(ggmosaic)
+
+mosaic_gender_interference <- ggplot(data = data) +
+  geom_mosaic(aes(x = product(gender), fill = interfere_treated)) +   
+  labs(y="Frequency of Work Interference", 
+       x="Gender Identity", fill = "Interference Frequency",
+       title = "Gender Differences in Work Interference 
+       When Disorder is Treated") 
+
+mosaic_remote_interference <- ggplot(data = data) +
+  geom_mosaic(aes(x = product(remote_work), fill = interfere_treated)) +   
+  labs(y="Frequency of Work Interference", 
+       x="Remote Work Status", fill = "Interference Frequency",
+       title = "Differences in Work Interference 
+       When Disorder is Treated Between 
+       Remote and Non-Remote Workers") 
+
+mosaic_gender_interference
+
+mosaic_remote_interference
 
 ```
 
@@ -110,7 +135,8 @@ library(mice)
 library(naniar)
 library(UpSetR)
 
-vis_miss(data, sort_miss = TRUE, jitter = TRUE)
+replace_with_na_all(data, condition = ~.x == "")
+vis_miss(data, sort_miss = TRUE)
 gg_miss_upset(data)
 
 #gg_miss_fct(x = data, fct = )
