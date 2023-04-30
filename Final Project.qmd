@@ -20,7 +20,24 @@ data$"What.is.your.gender."[data$"What.is.your.gender." == "female"] <- "f"
 data$"What.is.your.gender."[data$"What.is.your.gender." == "male"] <- "m"
 ```
 
+
+
 ```{r EDA}
+
+```
+
+
+```{r modelling missingness}
+library(mice)
+library(naniar)
+library(UpSetR)
+
+vis_miss(data, sort_miss = TRUE)
+gg_miss_upset(data)
+
+#gg_miss_fct(x = data, fct = )
+#gg_miss_fct(x = data, fct = )
+#gg_miss_fct(x = data, fct = )
 
 ```
 
