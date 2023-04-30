@@ -18,6 +18,26 @@ data$"What.is.your.gender." <- str_trim(data$"What.is.your.gender.")
 
 data$"What.is.your.gender."[data$"What.is.your.gender." == "female"] <- "f"
 data$"What.is.your.gender."[data$"What.is.your.gender." == "male"] <- "m"
+
+colnames(data)[1] ="self_employed"
+colnames(data)[2] ="num_employees"
+colnames(data)[3] ="company_focus"
+colnames(data)[4] ="primary_role_tech"
+colnames(data)[5] ="mental_health_covered"
+colnames(data)[6] ="know_care_options"
+colnames(data)[7] ="discussed_mental_health"
+colnames(data)[8] ="resources_offered"
+colnames(data)[9] ="anonymity_protected"
+colnames(data)[10] ="difficulty_requesting_leave"
+colnames(data)[11] ="mental_health_discussion_consequences"
+colnames(data)[12] ="physical_health_discussion_consequences"
+
+# Col M
+colnames(data)[13] ="comfort_discussing_with_coworkers"
+colnames(data)[14] ="comfort_discussing_with_supervisor"
+
+
+
 ```
 
 
@@ -32,7 +52,7 @@ library(mice)
 library(naniar)
 library(UpSetR)
 
-vis_miss(data, sort_miss = TRUE)
+vis_miss(data, sort_miss = TRUE, jitter = TRUE)
 gg_miss_upset(data)
 
 #gg_miss_fct(x = data, fct = )
