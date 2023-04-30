@@ -1,6 +1,6 @@
 ---
 title: "Sta 210 Final Project"
-
+Team Members: "Ashley Lo, Adela Guo"
 ---
 
 ```{r cleaning the dataset}
@@ -10,7 +10,6 @@ library(MASS)
 library(nnet)
 library(car)
 library(ggfortify)
-#data <- read.csv("mental_health_in_tech.csv")
 
 data <- read.csv("Mental Health Tech CSV Cleaned.csv") 
 
@@ -19,5 +18,9 @@ data$"What.is.your.gender." <- str_trim(data$"What.is.your.gender.")
 
 data$"What.is.your.gender."[data$"What.is.your.gender." == "female"] <- "f"
 data$"What.is.your.gender."[data$"What.is.your.gender." == "male"] <- "m"
+```
+
+```{r EDA}
+
 ```
 
