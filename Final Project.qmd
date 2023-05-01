@@ -136,12 +136,9 @@ library(naniar)
 library(UpSetR)
 
 replace_with_na_all(data, condition = ~.x == "")
+data[data == ""] <- NA
 vis_miss(data, sort_miss = TRUE)
 gg_miss_upset(data)
-
-#gg_miss_fct(x = data, fct = )
-#gg_miss_fct(x = data, fct = )
-#gg_miss_fct(x = data, fct = )
 
 ```
 
