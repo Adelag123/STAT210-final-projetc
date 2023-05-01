@@ -98,12 +98,10 @@ colnames(data)[63] ="remote_work"
 replace_with_na_all(data, condition = ~.x == "")
 ```
 
-
 ```{r EDA: }
 
 
 ```
-
 
 ```{r EDA: Demographic data}
 library(ggmosaic)
@@ -129,7 +127,6 @@ mosaic_remote_interference
 
 ```
 
-
 ```{r modelling missingness}
 library(mice)
 library(naniar)
@@ -137,8 +134,7 @@ library(UpSetR)
 
 replace_with_na_all(data, condition = ~.x == "")
 data[data == ""] <- NA
-vis_miss(data, sort_miss = TRUE)
+vis_miss(data, sort_miss = TRUE) + theme(text = element_text(size = 6))
 gg_miss_upset(data)
 
 ```
-
