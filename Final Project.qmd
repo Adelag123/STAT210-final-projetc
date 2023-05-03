@@ -95,12 +95,19 @@ colnames(data)[60] ="country_work"
 colnames(data)[61] ="USstate_work"
 colnames(data)[62] ="work_position"
 colnames(data)[63] ="remote_work"
+
 replace_with_na_all(data, condition = ~.x == "")
+data[data == ""] <- NA
+data$interfere_treated[data$interfere_treated == "Not applicable to me"] <- NA
+
+#new_dataset <- original_dataset[original_dataset$Response != "No", ]
+
 ```
 
-```{r EDA: }
+```{r EDA: Summary Statistics }
 
-
+ggplot(data, aes(x=reorder(interfere_treated, interfere_treated, function(x)-length(x)))) +
+geom_bar(fill='magenta2') +  labs(x='Work Interference of Mental Health Condition When Treated')
 ```
 
 ```{r EDA: Demographic data}
@@ -132,9 +139,15 @@ library(mice)
 library(naniar)
 library(UpSetR)
 
-replace_with_na_all(data, condition = ~.x == "")
-data[data == ""] <- NA
 vis_miss(data, sort_miss = TRUE) + theme(text = element_text(size = 6))
 gg_miss_upset(data)
-
 ```
+```{r creating the model}
+library(MASS)
+m1 <- polr(as.factor(interfere_treated) ~ physical_interview + mental_interview 
+           + hurt_career + coworker_view_negatively + share_friends_families 
+           + unsupportive_response + physical_interview*mental_interview 
+           + age + gender, data = data)
+summary(m1)
+```
+
