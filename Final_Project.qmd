@@ -4,6 +4,9 @@ Team Members: "Ashley Lo, Adela Guo"
 format: pdf
 geometry: margin=2.5cm
 ---
+# Mental health at work: Exploring the relationship between perceived stigma and work interference
+
+## Introduction
 
 ```{r cleaning the dataset, message = F, warning = F, echo=FALSE, results = FALSE}
 library(tidyverse) 
@@ -105,6 +108,22 @@ data[data == ""] <- NA
 data <- data[data$interfere_treated != "Not applicable to me", ]
 
 ```
+Mental health at work has long been under the spotlight of academic research and public discussion. A plethora of research has demonstrated the significant link between mental health disorders and presenteeism, work absences, decreased productivity, and long-term disability (Corbière et al., 2013, de Oliveira et al., 2023, Bubonya et al., 2017). Economic burden is also well-studied - twelve billion working days are lost every year to depression and anxiety alone, costing the global economy US$ 1 trillion (Mental Health in the Workplace, n.d.). More importantly, people living with severe mental health conditions are largely excluded from paid work, which is deemed important for recovery, creating a vicious cycle (Dunn et al., 2008).
+To better understand risk factors for negative mental health outcomes and mental health at work in general, perceived stigma is one of the most imperative factors to research in depth.  Perceived stigma (PS) is the fear of being discriminated against and the internalization of perceived prejudices to develop negative feelings about oneself (Latalova et al., 2014, Tesfaw et al., 2020). PS is common and frequent worldwide, with strong associations with mental disorders but only weak associations with physical conditions (Alonso et al., 2008). PS of mental health disorders contributes to a delay in seeking help, reduced access to health services, and suboptimal treatment (Stuart, 2016, Clement et al., 2015).
+
+Despite established research mentioned above, we observed some significant gaps in existing research. Firstly, the relationship between PS and mental health in a work-specific context is yet to be explored. How to measure PS at the workplace? How can PS contribute to disruptions of or reduced productivity in paid labor? More importantly, most of the data points collected were way before Covid-19 and thus systematically differ from some of the unique struggles workers face today. More recent or even ongoing surveys are needed. Finally, most of the studies on work interference or work-related productivity and absence issues fail to specify the stages of treatment and recovery. These studies ignore or neglect work interference for those who are actively getting treatment for their conditions and yet still struggle in the workforce.
+As a result, this paper aims at exploring the relationship between perceived stigma and work interference when mental illness is treated effectively. The dataset used for this study is an ongoing mental health in tech industry survey originally distributed in 2016 with some results published in 2020, encompassing some workers’ experiences during the Covid-19 pandemic (OSMI Mental Health in Tech Survey 2016, n.d.). As of the date of its publication, the survey gathered over 1400 responses, with 63 individual survey item questions and variables. It is worth noting that the survey was distributed via Twitter and through talks given at conferences (Mammal, 2017).
+
+### Data cleaning process
+
+To clean the data, the “gender” column was modified to condense the responses into 3 categories: male, female, and other. This was necessary because in the original survey, the question asking for the participants’ genders was a short response rather than a drop-down menu, resulting in entries of the same gender identity using different expressions, e.g. female gender as “woman,” “female,” or “f.” The “other” category was created to hold all responses that did not indicate male or female gender, such as “nonbinary,” “agender,” or “genderfluid.” A limitation to doing this is the loss of information that results from grouping together different gender identities in the same category, but given how many ways gender nonconformity was expressed, this was determined to be the only solution that would allow for a reasonable number of potential values for the “gender” variable. As a result of our data cleaning process, cisgender and transgender individuals with the same gender identity were included in the same category, resulting in an inability to differentiate the experiences of transgender tech workers from cisgender ones in analysis. 
+
+A second choice made in cleaning the data was removing all entries where the participant responded “Not applicable to me” to the question that asked how frequently experienced work interference due to a mental health condition, if they were receiving effective treatment for it. This was because this variable was our response variable of interest, and we were interested in how perceived stigma of mental health conditions affected the frequency of work interference experienced by people who are receiving effective treatment for a mental health condition, which assumes that any participants included in the analysis do experience work interference from a treated mental health condition.
+
+
+### Exploratory data analysis
+
+Remote work has been associated with increased productivity, therefore potentially allowing remote workers with mental health disorders to counteract work interference stemming from mental health issues and PS (Graffi & Parravicini, 2022). There are also gender differences documented in mental health at work. For instance, job insecurity is positively associated with major depression in men but not in women (Wang et al., 2008). Finally, age might mediate work interference as older adults are often less comfortable seeking care from a mental health professional than their younger counterparts due to historical experiences and higher levels of stigma. Therefore, we can potentially control for all demographic factors to better account for the relationship between PS and work interference when mental health disorders are effectively treated. Exploratory data analysis was therefore conducted to examine the relationships between work interference due to a treated mental health condition and gender, remote work status, and age. 
 
 ```{r EDA: Summary Statistics, message = F, warning = F, echo=FALSE, out.width = "75%", out.height = "50%", fig.show="hold"}
 
@@ -149,16 +168,37 @@ mosaic_remote_interference <- ggplot(data = data) +
 mosaic_gender_interference
 mosaic_remote_interference
 ```
+As demonstrated by the plot above, “sometimes” is the most commonly reported frequency of work interference by study participants, with “rarely” being a close second. It also appears that there is minimal difference in the breakdown of work interference frequency due to gender or remote work status. The age plot is somewhat more ambiguous, as while the breakdown of frequencies does not appear to differ due to age, for individuals older than 60, the breakdown of frequencies looks different from other age groups.
 
 
+## Methodology
 
-```{r modelling missingness, message = F, warning = F, echo=FALSE, out.width = "75%", out.height = "55%", fig.show="hold"}
-library(mice)
-library(naniar)
-library(UpSetR)
+### Model selection
+The present study does not aim at precisely predicting the response variable. Instead, it is interested in how perceived stigma may or may not correlate with work interference when a mental health condition is treated effectively. Therefore, this study does not rely on model selection methods like LASSO or step-wise selection; instead, domain knowledge and literature review of existing research in the field are main sources of model selection criteria.
 
-vis_miss(data, sort_miss = TRUE) + theme(text = element_text(size = 6))
+We intend to include all the survey questions related to perceived stigma: 1) Would you be willing to bring up a physical health issue with a potential employer in an interview (“physical_interview”); 2) Would you be willing to bring up a mental health issue with a potential employer in an interview  (“mental_interview”); 3) Do you feel that being identified as a person with a mental health issue would hurt your career (“hurt_career”); 4) Do you think that team members co-workers would view you more negatively if they knew you suffered from a mental health issue (“coworker_view_negatively”); 5) How willing would you be to share with friends and family that you have a mental illness (“share_friends_families”). All of these variables are self-reported, categorical variables with 3 to 5 levels.  
+
+According to our EDA, visualizations demonstrate only extremely weak differences across gender and remote work categories. As a result, we intend to control for only one demographic information - age.  
+
+Besides individual predictors, this study identifies one potential interaction that can be potentially interesting: physical_interview (“Would you be willing to bring up a physical health issue with a potential employer in an interview”) x mental_interview (“Would you be willing to bring up a mental health issue with a potential employer in an interview”). This interaction term would help to explore the relationship between an individual’s willingness to disclose physical and mental health issues in a job interview. We suspect that those who pertain stigma around physical conditions could also be more likely to show high PS in mental health. 
+
+Based on variables identified above, our study employs an ordinal regression model. This model is selected based on the fact that the response variable, the frequency of work interference when a mental health condition is treated effectively, or “interfere_treated”, is a categorical variable with ordered multiple categories. Specifically, “interfere_treated” has ratings of “never, rarely, sometimes, and often”, ranging from the least frequent to the most frequent. 
+
+
+### Diagnostics and Assumptions
+```{r assessing linearity, message = F, warning = F, echo=FALSE, out.width = "50%", out.height = "50%", fig.width="85%"}
+library(Stat2Data)
+emplogitplot1(as.factor(interfere_treated) ~ age,
+              data = data,
+              ngroups = "all")
 ```
+
+To test the linearity assumption for age, the continuous predictor used in our model, we created an emplogit plot, as shown. This plot suggests that the relationship between log odds and age is approximately linear, as the points appear to be randomly clustered around the blue line.
+
+The other assumption for an ordinal regression model is the proportional odds assumption. This means that the beta terms associated with the relative odds of belonging to 2 consecutive work interference categories is the same regardless of which relative odds are being calculated. This means that changing the value of a categorical variable would be associated with the same multiplicative change in the odds of a person never vs. rarely, rarely vs. sometimes, and sometimes vs. often experiencing work interference. This appears to be a reasonable assumption to make, as it seems like the difficulty of moving from consecutive categories is the same. We would not expect it to be more difficult to move from “Sometimes” to “Often” compared to a movement at the lower end of the scale, and the difficulty moving from “Never” to “Rarely” and “Rarely” to “Sometimes” are comparable.
+
+
+## Results
 
 ```{r creating the model, message = F, warning = F, echo=FALSE,out.width = "50%", out.height = "50%"}
 library(MASS)
@@ -186,9 +226,59 @@ cat('</div>')
 
 ```
 
-```{r assessing linearity, message = F, warning = F, echo=FALSE, out.width = "50%", out.height = "50%", fig.width="85%"}
-library(Stat2Data)
-emplogitplot1(as.factor(interfere_treated) ~ age,
-              data = data,
-              ngroups = "all")
+### Model fit
+
+To assess the model fit, we conducted an ANOVA test comparing our ordinal regression model and a null model without any of the predictors. The null model has 873 residual degrees of freedom, while the model used for the study has 781 because it has additional parameters (different levels and different predictor variables). The residual deviance (Resid. Dev) measures the difference between the observed data and the predictions made by the model, with lower values indicating better fit. The null model has a residual deviance of 2097.794, and our model has a residual deviance of 2064.937, indicating slightly better fit than the null model. The “Pr(>Chi)” column gives the p-value for a chi-squared test of the difference in deviance between the two models. This corresponds to a p-value of 0.06391365, which is very close to our significance level of 0.05, but still larger. The predictor variables we select do not significantly improve the fit of the model, though the result is less absolute, as our goal is not to make perfect predictions of the response variable. Considering that the p value is close to 0.05 and the goal of the study is to explore potential relationships instead of making predictions, the model fit is acceptable. 
+
+```{r age-interesting-finding, message = F, warning = F, echo=FALSE, results=F }
+summary (data$age)
 ```
+
+### Interpretation of coefficients and interesting findings
+Two of the model’s coefficient estimates were significant at a threshold of .05: hurt_careerYes, it has and coworker_view_negativelyNo, I don't think they would. “hurt_careerYes, it has” is a dummy variable for the categorical variable that stores someone’s answer to “Do you feel that being identified as a person with a mental health issue would hurt your career?”. The model estimated this coefficient to be 0.595221 with a t-value of 2.48211, which means that the model predicts that compared to people who answered “maybe,” to this question, people who answered “Yes, it has,” have e^.595221 multiplicative odds of belonging to the next highest work interference category while controlling for all other variables and interaction effects. This suggests that people whose careers have been hurt by others knowing of their mental health condition are more likely to experience high levels of work interference. Since our model has enough degrees of freedom to be approximated as a normal distribution, a t-value of 2.48211 would give this coefficient a p-value well below .05, suggesting that there is sufficient evidence to reject the null hypothesis.
+
+“coworker_view_negativelyNo” is a dummy variable for the categorical variable that stores someone’s answer to “Do you think that team members/coworkers would view you more negatively if they knew you suffered from a mental health issue?”.  The model estimated this coefficient to be -0.405784 with a t-value of -2.24088, which means that the model predicts that compared to people who answered “maybe,” to this question, people who answered “No” have e^-.405784 multiplicative odds of belonging to the next highest work interference category while controlling for all other variables and interaction effects. This suggests that people who don’t think they’d be judged negatively by their coworkers for their mental health are less likely to experience high levels of work interference. Since the t-distribution can be approximated as normal, a t-value of -2.24088 would give this coefficient a p-value well below .05, suggesting that there is sufficient evidence to reject the null hypothesis.
+
+Though no significant relationship was found, a relevant variable worthy of discussion is the demographic information “age.”  Both the coefficients and standard error are very small (-0.002 and 0.007, separately). We suspect that the lack of significant relationship between age and work interference when mental disorder treated effectively could come from the fact that the median age for this dataset is only 33 years old, significantly lower than the population median age. This finding will also be discussed in the limitation section. 
+
+
+## Discussion
+
+### Conclusions
+
+### Limitations and suggestions of the present study 
+One of the main limitations of the present study is that it only focuses on participants who are already struggling with mental health problems. This choice in itself can be justified by domain knowledge and specific needs of a study, but statistically speaking, this method forced us to ignore a huge proportion of missing data with response related to the lack of direct experience of mental health disorders. For instance, the dataset originally contained 1433 responses, but 557 of those participants answered “not applicable” for the work interference question (our response variable). Through complete case analysis, this population is excluded. A proportion of these 557 participants, however, also reported perceived stigma of mental illness. This creates a significant limitation of how we handle missing data and systematically ignore people with perceived stigma but without mental health disorders. We suggest that future scholars evaluate this population and include their data points. 
+
+Another limitation pertains to issues concerning the reliability and validity of the research, particularly in regard to partiality in participant selection and response. The surveys are first impacted by biased sampling. Given that the survey was conducted on an opt-in basis, it is probable that the dataset is subject to selection bias. Specifically, it is plausible that individuals who are more interested in mental health would be more likely to participate in this survey. Those surveys posted on Twitter with hyperlinks might also select younger, more active social media users, a population less representative of all tech workers. The surveys are also heavily skewed by self-report biases and demand characteristics. Although anonymity is promised, many might still underreport their struggle with mental illness given that it is highly stigmatized. We encourage future researchers to develop more diverse ways of measuring mental health in the workplace, with both self-report measures and more reliable physiological markers or experimental designs to maintain more reliable and valid data. 
+
+### Appropriateness of analysis
+One potential issue that may make our analysis inappropriate is how correlated the predictor variables likely are. Since we were interested in investigating how different aspects of perceived stigma affect a person’s frequency of work interference, almost all our predictor variables were related to a particular aspect of perceived stigma, which could result in many estimated coefficients appearing statistically insignificant because their effects are necessarily coupled with other predictors. Another potential issue with the appropriateness of our analysis is the misalignment with the goal of an ordinal regression model and our research question. By creating an ordinal regression model to predict work interference frequency due to a treated mental health condition, any coefficient estimates would only tell us if a particular variable, such as judgment from coworkers, is statistically significant for predicting increased work interference when controlling for all other variables. This is somewhat in misalignment with our goals, as we were less interested in predicting work interference using perceived stigma than on determining the relationships between different aspects of perceived stigma and work interference. 
+
+### Future work 
+Beyond the scope of our dataset, there are a lot more potential work to focus on in the field of mental health at work. To start with, does perceived stigma relate to work interference in the same way across different industries other than the tech industry? Another important field of study relates to the unique lived experiences of sexual and gender minorities, including but not limited to transgender, gender-fluid, non-binary, intersex, and agender individuals. Our research data does include participants with diverse gender identities, but due to the small sample size of individual categories, we categorized everyone who doesn’t identify with either “female” or “male” as “other.” This deprives the data of its nuances and fails to take into account that LGBTQAI+ individuals are of greater mental health risks. We suggest that other researchers conducted larger-scale research on sexual and gender minorities or members of the LGBTQAI+ communities. 
+
+
+
+## References
+Alonso, J., Buron, A., Bruffaerts, R., He, Y., Posada-Villa, J., Lepine, J.-P., Angermeyer, M. C., Levinson, D., De Girolamo, G., Tachimori, H., Mneimneh, Z. N., Medina-Mora, M. E., Ormel, J., 
+
+Scott, K. M., Gureje, O., Haro, J. M., Gluzman, S., Lee, S., Vilagut, G., … Consortium,  the W. M. H. (2008). Association of perceived stigma and mood and anxiety disorders: Results from the World Mental Health Surveys. Acta Psychiatrica Scandinavica, 118(4), 305–314. https://doi.org/10.1111/j.1600-0447.2008.01241.x
+
+Bubonya, M., Cobb-Clark, D. A., & Wooden, M. (2017). Mental health and productivity at work: Does what you do matter? Labour Economics, 46, 150–165. https://doi.org/10.1016/j.labeco.2017.05.001
+
+Clement, S., Schauman, O., Graham, T., Maggioni, F., Evans-Lacko, S., Bezborodovs, N., Morgan, C., Rüsch, N., Brown, J. S. L., & Thornicroft, G. (2015). What is the impact of mental health-related stigma on help-seeking? A systematic review of quantitative and qualitative studies. Psychological Medicine, 45(1), 11–27. https://doi.org/10.1017/S0033291714000129
+
+Corbière, M., Negrini, A., & Dewa, C. S. (2013). Mental Health Problems and Mental Disorders: Linked Determinants to Work Participation and Work Functioning. In P. Loisel & J. R. Anema (Eds.), Handbook of Work Disability: Prevention and Management (pp. 267–288). Springer. https://doi.org/10.1007/978-1-4614-6214-9_17
+
+de Oliveira, C., Saka, M., Bone, L., & Jacobs, R. (2023). The Role of Mental Health on Workplace Productivity: A Critical Review of the Literature. Applied Health Economics and Health Policy, 21(2), 167–193. https://doi.org/10.1007/s40258-022-00761-w
+
+Dunn, E. C., Wewiorski, N. J., & Rogers, E. S. (2008). The meaning and importance of employment to people in recovery from serious mental illness: Results of a qualitative study. Psychiatric Rehabilitation Journal, 32(1), 59–62. https://doi.org/10.2975/32.1.2008.59.62
+
+Latalova, K., Kamaradova, D., & Prasko, J. (2014). Perspectives on perceived stigma and self-stigma in adult male patients with depression. Neuropsychiatric Disease and Treatment, 10, 1399–1405. https://doi.org/10.2147/NDT.S54081
+Mental health in the workplace. (n.d.). Retrieved April 30, 2023, from https://www.who.int/teams/mental-health-and-substance-use/promotion-prevention/mental-health-in-the-workplace
+
+Stuart, H. (2016). Reducing the stigma of mental illness. Global Mental Health, 3, e17. https://doi.org/10.1017/gmh.2016.11
+
+Tesfaw, G., Kibru, B., & Ayano, G. (2020). Prevalence and factors associated with higher levels of perceived stigma among people with schizophrenia Addis Ababa, Ethiopia. International Journal of Mental Health Systems, 14(1), 19. https://doi.org/10.1186/s13033-020-00348-9
+ 
+
