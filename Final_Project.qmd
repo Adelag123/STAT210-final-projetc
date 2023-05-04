@@ -106,15 +106,31 @@ data <- data[data$interfere_treated != "Not applicable to me", ]
 
 ```
 
-```{r EDA: Summary Statistics, message = F, warning = F, echo=FALSE, out.width = "50%", out.height = "50%", fig.show="hold"}
+```{r EDA: Summary Statistics, message = F, warning = F, echo=FALSE, out.width = "75%", out.height = "50%", fig.show="hold"}
 
-ggplot(data, aes(x=reorder(interfere_treated, interfere_treated, function(x)-length(x)))) +
-geom_bar(fill='magenta2') +  labs(x='Work Interference of Mental Health Condition When Treated')
+library(gridExtra)
+summary_plot <- ggplot(data, aes(x=reorder(interfere_treated, interfere_treated, function(x)-length(x)))) +
+geom_bar(fill='magenta2') +  labs(x='response variable')
+new_summary <- summary_plot + 
+  theme(plot.title.position = "plot")
+
+scatter_age_interference <- ggplot(data, aes(x = age, y = interfere_treated)) +
+  geom_point() + geom_jitter(width = 15, height = 0.35) +
+  labs(x = "Age",
+       y = "Interference Frequency",
+       title = 
+      "Age Differences in 
+       Work Interference 
+       When Disorder 
+       Treated")
+
+grid.arrange(new_summary, scatter_age_interference, 
+             ncol = 2, widths = c(0.38, 0.62))
+
 ```
 
-```{r EDA: Demographic data, message = F, warning = F, echo=FALSE, out.width = "50%", out.height = "50%", fig.show="hold"}
+```{r EDA: Demographic data, message = F, warning = F, echo=FALSE, out.width = "60%", out.height = "50%", fig.show="50%"}
 library(ggmosaic)
-library(gridExtra)
 
 mosaic_gender_interference <- ggplot(data = data) +
   geom_mosaic(aes(x = product(gender), fill = interfere_treated)) +   
@@ -128,21 +144,15 @@ mosaic_remote_interference <- ggplot(data = data) +
   labs(y="Frequency of Work Interference", 
        x="Remote Work Status", fill = "Interference Frequency",
        title = "Differences in Work Interference 
-       When Disorder is Treated Between 
-       Remote and Non-Remote Workers") 
-
-scatter_age_interference <- ggplot(data, aes(x = age, y = interfere_treated)) +
-  geom_point() + geom_jitter(width = 3.5, height = 1) +
-  labs(title = "Age Differences in Work Interference 
-       When Disorder is Treated",
-       x = "Age",
-       y = "Interference Frequency")
-
-grid.arrange(mosaic_gender_interference, mosaic_remote_interference, 
-             scatter_age_interference, ncol=3)
+       When Disorder is Treated 
+       Between Remote and Non-Remote Workers") 
+mosaic_gender_interference
+mosaic_remote_interference
 ```
 
-```{r modelling missingness, message = F, warning = F, echo=FALSE, out.width = "50%", out.height = "50%", fig.show="hold"}
+
+
+```{r modelling missingness, message = F, warning = F, echo=FALSE, out.width = "75%", out.height = "55%", fig.show="hold"}
 library(mice)
 library(naniar)
 library(UpSetR)
@@ -150,19 +160,26 @@ library(UpSetR)
 vis_miss(data, sort_miss = TRUE) + theme(text = element_text(size = 6))
 ```
 
-```{r creating the model, message = F, warning = F, echo=FALSE,out.width = "50%", out.height = "50%", fig.width="85%"}
+```{r creating the model, message = F, warning = F, echo=FALSE,out.width = "50%", out.height = "50%"}
 library(MASS)
 library(sure)
 m1 <- polr(as.factor(interfere_treated) ~ physical_interview + mental_interview 
            + hurt_career + coworker_view_negatively + share_friends_families 
            + physical_interview*mental_interview 
            + age, data = data)
-tidy(m1)
 
-m2 <- polr(as.factor(interfere_treated) ~ 1, 
-           data = data)
+output <- tidy(m1)
+cat('<div style="font-size: 10px">')
+print(output)
+cat('</div>')
 
-anova(m2, m1)
+m2 <- polr(as.factor(interfere_treated) ~ 1, data = data)
+
+output <- anova(m2, m1)
+cat('<div style="font-size: 10px">')
+print(output)
+cat('</div>')
+
 ```
 
 ```{r assessing linearity, message = F, warning = F, echo=FALSE, out.width = "50%", out.height = "50%", fig.width="85%"}
