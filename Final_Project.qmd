@@ -163,15 +163,19 @@ vis_miss(data, sort_miss = TRUE) + theme(text = element_text(size = 6))
 ```{r creating the model, message = F, warning = F, echo=FALSE,out.width = "50%", out.height = "50%"}
 library(MASS)
 library(sure)
-m1 <- polr(as.factor(interfere_treated) ~ physical_interview + mental_interview 
+m1 <- polr(ordered(data$interfere_treated, levels = c("Never", "Rarely", 
+                                                      "Sometimes", "Often")) 
+           ~ physical_interview + mental_interview 
            + hurt_career + coworker_view_negatively + share_friends_families 
            + physical_interview*mental_interview 
            + age, data = data)
 
-output <- tidy(m1)
-cat('<div style="font-size: 10px">')
-print(output)
-cat('</div>')
+#output <- tidy(m1)
+#cat('<div style="font-size: 10px">')
+#print(output)
+#cat('</div>')
+
+summary(m1)
 
 m2 <- polr(as.factor(interfere_treated) ~ 1, data = data)
 
